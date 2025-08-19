@@ -1,102 +1,234 @@
+"use client";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 
-export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+const fadeInUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0 }
+};
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+const staggerContainer = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.15 }
+  }
+};
+
+export default function Home() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "auto";
+  }, [menuOpen]);
+
+  return (
+    <div
+      className="flex flex-col min-h-screen font-sans text-gray-800"
+      style={{
+        background: "linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%)"
+      }}
+    >
+      {/* HEADER */}
+      <header className="bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-700 text-white shadow-lg fixed w-full z-50 backdrop-blur-lg bg-opacity-80">
+        <div className="max-w-7xl mx-auto flex justify-between items-center px-4 sm:px-6 py-3 sm:py-4">
+          <motion.h1
+            className="text-xl sm:text-2xl font-extrabold"
+            initial="hidden"
+            animate="visible"
+            variants={fadeInUp}
+            transition={{ duration: 0.8 }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            🚀 ParcelBuddy
+          </motion.h1>
+          <nav className="hidden md:flex space-x-6 lg:space-x-8 text-base lg:text-lg">
+            {["Features", "How It Works", "Contact"].map((item, i) => (
+              <motion.a
+                key={item}
+                href={`#${item.replace(/\s+/g, "-").toLowerCase()}`}
+                className="hover:underline hover:opacity-90 transition-colors"
+                whileHover={{ scale: 1.07 }}
+                whileTap={{ scale: 0.97 }}
+                initial="hidden"
+                animate="visible"
+                variants={fadeInUp}
+                transition={{ duration: 0.6, delay: 0.07 * i }}
+              >
+                {item}
+              </motion.a>
+            ))}
+          </nav>
+          <button
+            className="md:hidden"
+            onClick={() => setMenuOpen(!menuOpen)}
           >
-            Read our docs
-          </a>
+            <span className="material-icons text-3xl">
+              {menuOpen ? "close" : "menu"}
+            </span>
+          </button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        {/* Mobile Menu */}
+        {menuOpen && (
+          <motion.div
+            className="md:hidden bg-blue-700 px-4 py-5 space-y-4 text-lg"
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+          >
+            {["Features", "How It Works", "Contact"].map((item, i) => (
+              <motion.a
+                key={item}
+                href={`#${item.replace(/\s+/g, "-").toLowerCase()}`}
+                className="block hover:underline"
+                whileHover={{ scale: 1.05 }}
+                onClick={() => setMenuOpen(false)}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.03 * i }}
+              >
+                {item}
+              </motion.a>
+            ))}
+          </motion.div>
+        )}
+      </header>
+
+      {/* HERO SECTION */}
+      <motion.section
+        className="relative h-[80vh] sm:h-[90vh] w-full"
+        initial="hidden"
+        whileInView="visible"
+        variants={staggerContainer}
+        viewport={{ once: true, amount: 0.4 }}
+      >
+        <Image
+          src="/main.png"
+          alt="Parcel Delivery"
+          fill
+          priority
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-white/0" />
+
+        <motion.div
+          className="absolute inset-0 flex flex-col justify-center items-center text-center px-4 sm:px-6"
+          variants={staggerContainer}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          <motion.h2
+            className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 drop-shadow-lg"
+            variants={fadeInUp}
+          >
+            Your Parcels, Delivered by Friends 🎯
+          </motion.h2>
+          <motion.p
+            className="text-base sm:text-lg lg:text-xl text-gray-200 max-w-xl sm:max-w-2xl mx-auto mb-6 sm:mb-8"
+            variants={fadeInUp}
+            transition={{ delay: 0.2 }}
+          >
+            No more SJT runs — get your packages faster while helping each other.
+          </motion.p>
+          <motion.div
+            className="flex flex-col sm:flex-row gap-4 sm:gap-6"
+            variants={fadeInUp}
+            transition={{ delay: 0.3 }}
+          >
+            <motion.a
+              href="/login"
+              className="bg-blue-600 text-white px-6 sm:px-8 py-3 rounded-full shadow-lg hover:bg-blue-700 font-semibold inline-block transition text-sm sm:text-base"
+              whileHover={{
+                scale: 1.07,
+                boxShadow: "0 8px 32px rgba(55,100,200,.21)"
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Get Started 🚀
+            </motion.a>
+            <motion.a
+              href="#features"
+              className="bg-white border border-blue-600 text-blue-700 px-6 sm:px-8 py-3 rounded-full shadow hover:shadow-md inline-block font-semibold transition text-sm sm:text-base"
+              whileHover={{
+                scale: 1.05,
+                backgroundColor: "#f0f8ff"
+              }}
+              whileTap={{ scale: 0.96 }}
+            >
+              Learn More
+            </motion.a>
+          </motion.div>
+        </motion.div>
+      </motion.section>
+
+      {/* FEATURES */}
+      <motion.section
+        id="features"
+        className="py-16 sm:py-20 bg-white"
+        initial="hidden"
+        whileInView="visible"
+        variants={staggerContainer}
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        <motion.h3
+          className="text-2xl sm:text-4xl font-bold text-center mb-8 sm:mb-12"
+          variants={fadeInUp}
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          ✨ Why ParcelBuddy?
+        </motion.h3>
+        <div className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 max-w-7xl mx-auto px-4 sm:px-6">
+          {[
+            { icon: "⏳", title: "Save Time", text: "Avoid unnecessary trips to SJT." },
+            { icon: "⚖️", title: "Gender Rules", text: "Follows hostel policies perfectly." },
+            { icon: "🏆", title: "Earn Rewards", text: "Get on leaderboards for helping." }
+          ].map((f, i) => (
+            <motion.div
+              key={i}
+              className="p-5 sm:p-6 bg-gradient-to-br from-blue-50 via-white to-indigo-100 rounded-xl shadow hover:shadow-2xl transition-transform hover:-translate-y-1"
+              variants={fadeInUp}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ delay: 0.1 * i }}
+            >
+              <h4 className="text-lg sm:text-xl font-bold mb-2">{f.icon} {f.title}</h4>
+              <p className="text-sm sm:text-base">{f.text}</p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* HOW IT WORKS */}
+      <motion.section
+        id="how-it-works"
+        className="py-16 sm:py-20 bg-gradient-to-b from-gray-50 to-white"
+        initial="hidden"
+        whileInView="visible"
+        variants={staggerContainer}
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        <motion.div
+          className="max-w-7xl mx-auto px-4 sm:px-6 text-center"
+          variants={fadeInUp}
         >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+          <h3 className="text-2xl sm:text-4xl font-bold mb-8 sm:mb-10">
+            How It Works
+          </h3>
+          <motion.div
+            className="space-y-4 sm:space-y-6 text-base sm:text-lg text-gray-700 max-w-3xl mx-auto"
+            variants={fadeInUp}
+            transition={{ delay: 0.2 }}
+          >
+            <p>1️⃣ Post a pickup request with your hostel & gender preference.</p>
+            <p>2️⃣ Someone nearby accepts your request.</p>
+            <p>3️⃣ They deliver it to your hostel, and you mark it as completed.</p>
+          </motion.div>
+        </motion.div>
+      </motion.section>
+
+      {/* FOOTER */}
+      <footer className="bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-700 text-white py-6 sm:py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center space-y-2">
+          <p className="text-sm sm:text-base">
+            © {new Date().getFullYear()} ParcelBuddy | Made for VIT Vellore
+          </p>
+          <p className="text-xs sm:text-sm">parcelbuddy@vit.ac.in</p>
+        </div>
       </footer>
     </div>
   );
