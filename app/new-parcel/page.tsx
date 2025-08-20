@@ -1,112 +1,8 @@
-// "use client";
-// import React, { useState, useEffect } from "react";
-// import { motion } from "framer-motion";
-// import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
-// import { auth } from "@/lib/firebaseClient";
-
-// // Required mark
-// const RequiredMark = () => (
-//   <span className="text-red-500 font-bold ml-1" aria-label="required">*</span>
-// );
-
-// // Animation Variants
-// const fadeInUp = {
-//   hidden: { opacity: 0, y: 30 },
-//   visible: { opacity: 1, y: 0 }
-// };
-
-// const staggerContainer = {
-//   hidden: {},
-//   visible: {
-//     transition: { staggerChildren: 0.12 }
-//   }
-// };
-
-// export default function NewParcelPage() {
-//   const [formData, setFormData] = useState({
-//     name: "",
-//     contactNumber: "",
-//     gender: "",
-//     parcelCost: "",
-//     placedItemSite: "",
-//     parcelStatus: "unpaid",
-//     pickupPlace: "In front of SJT",
-//     deadline: "",
-//     deliveryPersonName: "",
-//     hostelBlock: ""
-//   });
-//   const [loading, setLoading] = useState(false);
-//   const [message, setMessage] = useState("");
-//   const [uid, setUid] = useState<string | null>(null);
-
-//    useEffect(() => {
-//     const currentUser = auth.currentUser;
-//     if (currentUser) {
-//       setUid(currentUser.uid);
-//     } else {
-//       const unsub = auth.onAuthStateChanged((user) => {
-//         setUid(user ? user.uid : null);
-//       });
-//       return () => unsub();
-//     }
-//   }, []);
-
-//   const handleChange = (
-//     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-//   ) => {
-//     setFormData({ ...formData, [e.target.name]: e.target.value });
-//   };
-
-//  const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     if (!uid) {
-//       setMessage("❌ Unable to determine logged-in user. Please log in again.");
-//       return;
-//     }
-
-//     setLoading(true);
-//     setMessage("");
-//     const cost =
-//       formData.parcelCost.trim() === "" ? null : Number(formData.parcelCost);
-
-//     try {
-//       const res = await fetch("/api/parcel/new", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({
-//           ...formData,
-//           parcelCost: cost,
-//           userId: uid // ✅ attaching logged-in user's UID
-//         })
-//       });
-
-//       const data = await res.json();
-//       if (!res.ok) throw new Error(data.error || "Failed to place order");
-
-//       setMessage("✅ Parcel order placed successfully!");
-//       setFormData({
-//         name: "",
-//         contactNumber: "",
-//         gender: "",
-//         parcelCost: "",
-//         placedItemSite: "",
-//         parcelStatus: "unpaid",
-//         pickupPlace: "In front of SJT",
-//         deadline: "",
-//         deliveryPersonName: "",
-//         hostelBlock: ""
-//       });
-//     } catch (err) {
-//       setMessage("❌ " + (err as Error).message);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
-import { auth } from "@/lib/firebaseClient"; // same client used in Dashboard
+import { auth } from "@/lib/firebaseClient"; 
 import { onAuthStateChanged } from "firebase/auth";
 
 // Required mark
@@ -273,7 +169,7 @@ export default function NewParcelPage() {
             <input
               type="text"
               name="name"
-              placeholder="Enter recipient's name"
+              placeholder="Enter recipient&apos;s name"
               value={formData.name}
               onChange={handleChange}
               required

@@ -389,7 +389,7 @@ export default function Dashboard() {
                 Need something delivered to your hostel?
               </h2>
               <p className="text-emerald-100 max-w-2xl">
-                Place a request and we'll pick up your parcel from any location
+                Place a request and we&apos;ll pick up your parcel from any location
                 and deliver it straight to your hostel doorstep.
               </p>
             </div>
@@ -652,8 +652,6 @@ export default function Dashboard() {
                         In Progress
                       </p>
                     )}
-
-                    {/* For My Parcels (owner's page) */}
                     {showingMyOrders &&
                       parcel.userId === currentUser?.email &&
                       parcel.deliveryStatus === "in_progress" && (
